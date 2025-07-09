@@ -110,6 +110,10 @@ int main(void)
             cout << "Error!" << endl;
         }
 
+        int nrAttributes;
+        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+        cout << "Max attributes: " << nrAttributes << endl;
+
         VertexArray va;
         VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
