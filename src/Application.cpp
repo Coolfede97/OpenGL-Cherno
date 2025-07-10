@@ -11,6 +11,7 @@ using namespace std;
 #include "IndexBuffer.h" 
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 
 int main(void)
 {
@@ -26,10 +27,11 @@ int main(void)
     {
         float positions[] =
         {
-            -0.5f, -0.5f, // 0 
-            0.5f, -0.5f, // 1
-            0.5f, 0.5f, // 2
-            -0.5f, 0.5f, // 3
+          // X      Y     S     T 
+            -0.5f, -0.5f, 0.0f, 0.0f, // 0 
+             0.5f, -0.5f, 1.0f, 0.0f,// 1
+             0.5f,  0.5f, 1.0f, 1.0f,// 2
+            -0.5f,  0.5f, 0.0f, 1.0f// 3
         };
 
         unsigned int indices[] =
@@ -56,14 +58,18 @@ int main(void)
             cout << "Error!" << endl;
         }
 
+		GLCall(glEnable(GL_BLEND));
+		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
         int nrAttributes;
         glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
         cout << "Max attributes: " << nrAttributes << endl;
 
         VertexArray va;
-        VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+        VertexBuffer vb(positions, 4 * 4 * sizeof(float));
 
         VertexBufferLayout layout;
+        layout.Push<float>(2);
         layout.Push<float>(2);
         va.AddBuffer(vb, layout);
 
@@ -76,6 +82,12 @@ int main(void)
         Shader shader("res/shaders/BasicVertex.glsl", "res/shaders/BasicFragment.glsl");
         shader.Bind();
         shader.SetUniform4f("u_Color", 0.7f, 0.1f, 0.4f, 1.0);
+
+        Texture texture("res/textures/francoKO.jpg");
+        texture.Bind();
+        // The second parameter is 0 because that's the slot where we've created the texture 
+        // (that's why the ir no parameter in bind)
+        shader.SetUniform1i("u_Texture", 0);
 
         va.Unbind();
         vb.Unbind();

@@ -79,4 +79,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\francoKO.jpg">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
