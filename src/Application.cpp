@@ -13,6 +13,9 @@ using namespace std;
 #include "Shader.h"
 #include "Texture.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 int main(void)
 {
     GLFWwindow* window;
@@ -25,6 +28,7 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     {
+
         float positions[] =
         {
           // X      Y     S     T 
@@ -100,16 +104,26 @@ int main(void)
         float speed = 0.01f;
         float step = 0.1f;
 
+
         while (!glfwWindowShouldClose(window))
         {
             renderer.Clear();
 
             shader.Bind();
             shader.SetUniform4f("u_Color", r, 0.1, 0.4, 1.0);
+			
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::rotate(model, (float)glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shader.SetUniformMat4f("u_model", model);
+
+			glm::mat4 view = glm::mat4(1.0f);
+			view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+			shader.SetUniformMat4f("u_view", view);
+
+                glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+            shader.SetUniformMat4f("u_projection", projection);
 
             renderer.Draw(va, ib, shader);
-
-            GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
 
             if (r > 1.0f) step = -speed;
             else if (r < 0.0f) step = speed;
