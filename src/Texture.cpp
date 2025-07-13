@@ -12,6 +12,8 @@ Texture::Texture(const std::string& path)
 	// The last variable are the desired channels we want. We put 4 because of the RGBA channels
 	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 4);
 
+	if (!m_LocalBuffer) cout << "Error: image not found at path: " << path  << "\n";
+	
 	GLCall(glGenTextures(1, &m_RendererID));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
 
