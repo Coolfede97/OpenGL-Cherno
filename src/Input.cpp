@@ -40,37 +40,6 @@ void Input::UpdateInput(GLFWwindow* window)
     }
 }
 
-float Input::GetInputAxis2D(GLFWwindow* window, const std::string axis)
-{
-	float value = 0;
-	if (axis == "x")
-	{
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		{
-			value += 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		{
-			value -= 1.0f;
-		}
-		return value;
-	}
-	if (axis == "y")
-	{
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		{
-			value -= 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		{
-			value += 1.0f;
-		}
-		return value;
-	}
-	return 0;
-	// Handle Error
-}
-
 void Input::MoveCamera(GLFWwindow* window, Camera& camera, const float speed)
 {
 	glm::vec3 camera_dir = camera.m_direction;

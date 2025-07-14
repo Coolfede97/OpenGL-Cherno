@@ -6,6 +6,7 @@
 
 enum KeyCode
 {
+    // These values come from the ones of "glfw3.h"
     // Espaciado y entrada
     SpaceBar = 32,
     Quote = 39,     // Apostrophe
@@ -14,7 +15,7 @@ enum KeyCode
     Period = 46,
     Slash = 47,
 
-    // Números superiores (no numpad)
+    // Upper numbers (no numpad)
     Alpha0 = 48,
     Alpha1 = 49,
     Alpha2 = 50,
@@ -29,7 +30,7 @@ enum KeyCode
     Semicolon = 59,
     Equals = 61,
 
-    // Letras
+    // Letters
     A = 65, B, C, D, E, F, G, H, I, J,
     K, L, M, N, O, P, Q, R, S, T,
     U, V, W, X, Y, Z,
@@ -39,7 +40,7 @@ enum KeyCode
     RightBracket = 93,
     BackQuote = 96, // Grave accent
 
-    // Teclas de función
+    // Function keys
     Escape = 256,
     Enter = 257,
     Tab = 258,
@@ -64,7 +65,7 @@ enum KeyCode
     F1 = 290, F2, F3, F4, F5, F6,
     F7, F8, F9, F10, F11, F12,
 
-    // Teclado numérico
+    // Numpad
     Keypad0 = 320,
     Keypad1, Keypad2, Keypad3, Keypad4,
     Keypad5, Keypad6, Keypad7, Keypad8, Keypad9,
@@ -76,7 +77,7 @@ enum KeyCode
     KeypadEnter = 335,
     KeypadEquals = 336,
 
-    // Teclas modificadoras
+    // Modifier keys
     LeftShift = 340,
     LeftControl = 341,
     LeftAlt = 342,
@@ -91,6 +92,7 @@ enum KeyCode
 
 enum MouseMode
 {
+    // These values come from the ones of "glfw3.h"
     MouseNormal = 0x00034001,
     MouseHidden = 0x00034002,
     MouseDisabled = 0x00034003,
@@ -101,11 +103,12 @@ class Input
 private:
 	static unordered_map<KeyCode, bool> keysPressed;
     static MouseMode currentMouseMode;
+
 public:
     static MouseMode GetCurrentMouseMode() { return Input::currentMouseMode; }
     static void SetMouseMode(GLFWwindow* window, MouseMode mode);
 	static bool KeyPressed(KeyCode key) { return Input::keysPressed[key]; }
 	static void UpdateInput(GLFWwindow* window);
-	static float GetInputAxis2D(GLFWwindow* window, const std::string axis);
-	static void MoveCamera(GLFWwindow* window, Camera& camera, const float speed);
+	
+    static void MoveCamera(GLFWwindow* window, Camera& camera, const float speed);
 };
