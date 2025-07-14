@@ -151,6 +151,8 @@ int main(void)
 		Time time;
 		while (!glfwWindowShouldClose(window))
 		{	
+			Input::UpdateInput(window);
+
 			time.Update();
 
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
