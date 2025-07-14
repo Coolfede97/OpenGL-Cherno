@@ -35,8 +35,8 @@ void Input::MoveCamera(GLFWwindow* window, Camera& camera, const float speed)
 {
 	glm::vec3 camera_dir = camera.m_direction;
 	glm::vec3 camera_up = camera.m_up;
-	if (camera_dir == camera_up)
-		cout << "Error: camera_dir and camera_up can't be equal (because it results in a NaN when normalizing their cross product)" << "\n";
+	if (glm::length(glm::cross(camera_dir, camera_up)) == 0.0f)
+		cout << "Error: camera_dir and camera_up can't be parallel (because it results in a NaN when normalizing 0)" << "\n";
 	glm::vec3 velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{

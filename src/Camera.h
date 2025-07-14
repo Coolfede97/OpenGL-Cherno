@@ -14,7 +14,6 @@ public:
 	glm::vec3 m_direction;
 	glm::vec3 m_up;
 
-
 	float m_near_plane;
 	float m_far_plane;
 	float m_fov;

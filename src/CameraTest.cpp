@@ -149,7 +149,6 @@ int main(void)
 
 		Camera camera;
 		Time time;
-
 		while (!glfwWindowShouldClose(window))
 		{	
 			time.Update();
