@@ -89,12 +89,21 @@ enum KeyCode
     Menu = 348
 };
 
-
+enum MouseMode
+{
+    MouseNormal = 0x00034001,
+    MouseHidden = 0x00034002,
+    MouseDisabled = 0x00034003,
+    MouseCaptured = 0x00034004
+};
 class Input
 {
 private:
 	static unordered_map<KeyCode, bool> keysPressed;
+    static MouseMode currentMouseMode;
 public:
+    static MouseMode GetCurrentMouseMode() { return Input::currentMouseMode; }
+    static void SetMouseMode(GLFWwindow* window, MouseMode mode);
 	static bool KeyPressed(KeyCode key) { return Input::keysPressed[key]; }
 	static void UpdateInput(GLFWwindow* window);
 	static float GetInputAxis2D(GLFWwindow* window, const std::string axis);

@@ -152,7 +152,7 @@ int main(void)
 		while (!glfwWindowShouldClose(window))
 		{	
 			Input::UpdateInput(window);
-
+			if (Input::KeyPressed(KeyCode::SpaceBar)) Input::SetMouseMode(window, MouseMode::MouseDisabled);
 			time.Update();
 
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

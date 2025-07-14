@@ -25,7 +25,12 @@ unordered_map<KeyCode, bool> Input::keysPressed = {
     {RightShift, false}, {RightControl, false}, {RightAlt, false}, {RightCommand, false},
     {Menu, false}
 };
+MouseMode Input::currentMouseMode = MouseMode::MouseNormal;
 
+void Input::SetMouseMode(GLFWwindow* window, MouseMode mode)
+{
+	glfwSetInputMode(window, GLFW_CURSOR, mode);
+}
 
 void Input::UpdateInput(GLFWwindow* window)
 {
