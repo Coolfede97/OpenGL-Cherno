@@ -1,7 +1,7 @@
 #include "Input.h"
 
 
-unordered_map<KeyCode, bool> Input::keysPressed = {
+unordered_map<KeyCode, bool> Input::m_keysPressed = {
     {SpaceBar, false}, {Quote, false}, {Comma, false}, {Minus, false}, {Period, false}, {Slash, false},
     {Alpha0, false}, {Alpha1, false}, {Alpha2, false}, {Alpha3, false}, {Alpha4, false},
     {Alpha5, false}, {Alpha6, false}, {Alpha7, false}, {Alpha8, false}, {Alpha9, false},
@@ -25,41 +25,62 @@ unordered_map<KeyCode, bool> Input::keysPressed = {
     {RightShift, false}, {RightControl, false}, {RightAlt, false}, {RightCommand, false},
     {Menu, false}
 };
-MouseMode Input::currentMouseMode = MouseMode::MouseNormal;
+MouseMode Input::m_currentMouseMode = MouseMode::MouseNormal;
 
-void Input::SetMouseMode(GLFWwindow* window, MouseMode mode)
+GLFWwindow* Input::m_window = nullptr;
+int Input::m_windowWidth = 0;
+int Input::m_windowHeight = 0;
+
+Vec3 Input::m_mousePosPix = Vec3::Zero();
+Vec3 Input::m_lastMousePosPix = Vec3::Zero();
+Vec3 Input::m_mousePosNorm = Vec3::Zero();// Mouse normalized position  (-1.0 <-> 1.0)
+Vec3 Input::m_lastMousePosNorm = Vec3::Zero();
+
+void Input::SetMouseMode(MouseMode mode)
 {
-	glfwSetInputMode(window, GLFW_CURSOR, mode);
+	glfwSetInputMode(m_window, GLFW_CURSOR, mode);
 }
 
-void Input::UpdateInput(GLFWwindow* window)
+void Input::UpdateInput()
 {
-    for (const auto& pair : keysPressed)
+    for (const auto& pair : m_keysPressed)
     {
-        keysPressed[pair.first] = glfwGetKey(window, pair.first) == GLFW_PRESS;
+        m_keysPressed[pair.first] = glfwGetKey(m_window, pair.first) == GLFW_PRESS;
     }
 }
 
-void Input::MoveCamera(GLFWwindow* window, Camera& camera, const float speed)
+void Input::MouseCallback(GLFWwindow* p_window, double posX, double posY)
+{
+    glfwGetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
+
+    m_lastMousePosPix = m_mousePosPix;
+    m_mousePosPix = Vec3(posX - m_windowWidth / 2.0f, (m_windowHeight / 2.0f) - posY);
+
+    m_lastMousePosNorm = m_mousePosNorm;
+    m_mousePosNorm = Vec3(posX / (m_windowWidth / 2.0f) - 1.0f, 1.0f - (posY / (m_windowHeight / 2.0f)));
+
+}
+
+void Input::MoveCamera(Camera& camera, const float speed)
 {
 	glm::vec3 camera_dir = camera.m_direction;
 	glm::vec3 camera_up = camera.m_up;
 	if (glm::length(glm::cross(camera_dir, camera_up)) == 0.0f)
 		cout << "Error: camera_dir and camera_up can't be parallel (because it results in a NaN when normalizing 0)" << "\n";
 	glm::vec3 velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		velocity += speed * glm::normalize(glm::cross(camera_dir, camera_up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		velocity -= speed * glm::normalize(glm::cross(camera_dir, camera_up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		velocity += speed * camera_dir;
 	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		velocity -= speed * camera_dir;
 	}

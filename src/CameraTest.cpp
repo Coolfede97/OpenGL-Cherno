@@ -18,6 +18,9 @@ using namespace std;
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+// Made by CoolFede97
+#include "Vec3.h"
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 
@@ -38,6 +41,8 @@ int main(void)
 
 		/* Create a windowed mode window and its OpenGL context */
 		window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+		Input::SetWindow(window);
+
 		if (!window)
 		{
 			glfwTerminate();
@@ -58,6 +63,8 @@ int main(void)
 
 		GLCall(glEnable(GL_BLEND));
 		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
+		glfwSetCursorPosCallback(window, Input::MouseCallback);
 
 		float vertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -151,8 +158,9 @@ int main(void)
 		Time time;
 		while (!glfwWindowShouldClose(window))
 		{	
-			Input::UpdateInput(window);
-			if (Input::KeyPressed(KeyCode::SpaceBar)) Input::SetMouseMode(window, MouseMode::MouseDisabled);
+			Input::UpdateInput();
+			if (Input::KeyPressed(KeyCode::SpaceBar)) Input::SetMouseMode(MouseMode::MouseDisabled);
+			cout << Input::GetMousePosNorm() << "\n";
 			time.Update();
 
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -161,7 +169,7 @@ int main(void)
 			shader.Bind();
 
 			float camera_speed = 2.5f * time.DeltaTime();
-			Input::MoveCamera(window, camera, camera_speed);
+			Input::MoveCamera(camera, camera_speed);
 
 			shader.SetUniformMat4f("u_view", camera.GetViewMatrix());
 			shader.SetUniformMat4f("u_projection", camera.GetProjectionMatrix());

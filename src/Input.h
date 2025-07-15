@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "GLFW/glfw3.h"
 #include "Camera.h"
-
+#include "Vec3.h"
 enum KeyCode
 {
     // These values come from the ones of "glfw3.h"
@@ -101,14 +101,30 @@ enum MouseMode
 class Input
 {
 private:
-	static unordered_map<KeyCode, bool> keysPressed;
-    static MouseMode currentMouseMode;
+
+    static GLFWwindow* m_window;
+    static int m_windowWidth;
+    static int m_windowHeight;
+
+	static unordered_map<KeyCode, bool> m_keysPressed;
+    static MouseMode m_currentMouseMode;
+    
+    static Vec3 m_mousePosPix;
+    static Vec3 m_lastMousePosPix;
+    static Vec3 m_mousePosNorm; // Mouse normalized position  (-1.0 <-> 1.0)
+    static Vec3 m_lastMousePosNorm;
 
 public:
-    static MouseMode GetCurrentMouseMode() { return Input::currentMouseMode; }
-    static void SetMouseMode(GLFWwindow* window, MouseMode mode);
-	static bool KeyPressed(KeyCode key) { return Input::keysPressed[key]; }
-	static void UpdateInput(GLFWwindow* window);
+
+    static MouseMode GetCurrentMouseMode() { return Input::m_currentMouseMode; }
+    static Vec3 GetMousePosPix() { return m_mousePosPix; }
+    static Vec3 GetMousePosNorm() { return m_mousePosNorm; }
+    static Vec3 GetMouseDelta() { return m_mousePosPix - m_lastMousePosPix; }
+    static void SetMouseMode(MouseMode mode);
+    static void SetWindow(GLFWwindow* newWindow) { m_window = newWindow; }
+	static bool KeyPressed(KeyCode key) { return Input::m_keysPressed[key]; }
+	static void UpdateInput();
+    static void MouseCallback(GLFWwindow* p_window, double posX, double posY);
 	
-    static void MoveCamera(GLFWwindow* window, Camera& camera, const float speed);
+    static void MoveCamera(Camera& camera, const float speed);
 };
